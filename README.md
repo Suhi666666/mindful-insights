@@ -150,7 +150,7 @@ Unauthorized copying, modification, or commercial use is prohibited.
 
 ## 🌐 在线预览 | Live Demo
 
-🔗 [点击查看 / View Live](https://id-preview--3ae1aeae-f9cb-4b78-aa99-8f18d7f36d2f.lovable.app/)
+🔗 [点击查看 / View Live]https://id-preview-14a27186--3ae1aeae-f9cb-4b78-aa99-8f18d7f36d2f.lovable.app/
 
 ---
 
