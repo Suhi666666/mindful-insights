@@ -1,6 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { theories, type Theory } from "@/data/theories";
+import { catalog, TOTAL_THEORIES } from "@/data/catalog";
+import { useLearned, encouragement } from "@/lib/progress";
 
 export const Route = createFileRoute("/")({
   head: () => ({
