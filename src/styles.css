@@ -133,3 +133,5 @@
   background: var(--paper);
   box-shadow: 0 6px 14px -6px var(--paper-shadow);
 }
+
+.progress-gradient { background: var(--gradient-progress); }
