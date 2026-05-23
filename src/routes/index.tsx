@@ -1,6 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { theories, type Theory } from "@/data/theories";
+import { catalog, TOTAL_THEORIES } from "@/data/catalog";
+import { useLearned, encouragement } from "@/lib/progress";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -71,19 +73,21 @@ function Index() {
     return page / (totalPages + 1);
   }, [page, totalPages, isCover, isTakeaway]);
 
+  // when user reaches takeaway, auto-mark matching catalog entry as learned
+  const { learned, mark } = useLearned();
+  useEffect(() => {
+    if (!isTakeaway) return;
+    const match = catalog.find((c) => c.nameZh === theory.name);
+    if (match) mark(match.id);
+  }, [isTakeaway, theory.name, mark]);
+
   return (
-    <main className="relative min-h-screen overflow-hidden px-4 py-10 sm:py-16">
+    <main className="relative min-h-screen overflow-hidden px-4 py-8 sm:py-12">
       <BackgroundDecor />
 
-      <header className="mx-auto mb-8 flex max-w-3xl items-center justify-between text-ink-soft">
-        <div className="flex items-center gap-2">
-          <div className="h-2.5 w-2.5 rounded-full bg-primary" />
-          <span className="serif text-lg tracking-wide">懂一点</span>
-        </div>
-        <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-          闲时学一个理论
-        </span>
-      </header>
+      <section className="mx-auto mb-8 max-w-3xl">
+        <ProgressHero learnedCount={learned.size} />
+      </section>
 
       <section className="mx-auto max-w-3xl">
         {!started ? (
@@ -130,9 +134,62 @@ function Index() {
       </section>
 
       <footer className="mx-auto mt-16 max-w-3xl text-center text-xs text-muted-foreground">
-        按 ← → 翻页，空格继续。讲给奶奶听的版本 · v1
+        按 ← → 翻页，空格继续 · 想看全部理论？
+        <Link to="/catalog" className="ml-1 underline underline-offset-4 hover:text-ink">
+          打开 500+ 理论大全 →
+        </Link>
       </footer>
     </main>
+  );
+}
+
+function ProgressHero({ learnedCount }: { learnedCount: number }) {
+  const pct = Math.min(100, Math.round((learnedCount / TOTAL_THEORIES) * 100));
+  const r = 36;
+  const c = 2 * Math.PI * r;
+  const dash = (pct / 100) * c;
+  return (
+    <div className="flex items-center gap-5 rounded-2xl border border-border bg-card/70 px-5 py-4 backdrop-blur sm:gap-7 sm:px-7 sm:py-5">
+      <div className="relative shrink-0">
+        <svg width="88" height="88" viewBox="0 0 88 88" className="-rotate-90">
+          <circle cx="44" cy="44" r={r} stroke="oklch(0.85 0.03 75)" strokeWidth="8" fill="none" className="opacity-40" />
+          <circle
+            cx="44"
+            cy="44"
+            r={r}
+            stroke="url(#pg)"
+            strokeWidth="8"
+            strokeLinecap="round"
+            fill="none"
+            strokeDasharray={`${dash} ${c - dash}`}
+            style={{ transition: "stroke-dasharray 0.6s ease" }}
+          />
+          <defs>
+            <linearGradient id="pg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="oklch(0.75 0.18 60)" />
+              <stop offset="50%" stopColor="oklch(0.6 0.2 25)" />
+              <stop offset="100%" stopColor="oklch(0.55 0.2 330)" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center serif text-base text-ink tabular-nums">
+          {pct}%
+        </div>
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-baseline gap-2">
+          <span className="serif text-2xl text-ink tabular-nums">{learnedCount}</span>
+          <span className="text-xs text-ink-soft">/ {TOTAL_THEORIES} 个理论</span>
+        </div>
+        <div className="mt-1 truncate text-xs text-ink-soft">{encouragement(pct)}</div>
+        <Link
+          to="/catalog"
+          className="mt-1 inline-block text-[11px] text-primary underline-offset-4 hover:underline"
+        >
+          查看大全 →
+        </Link>
+      </div>
+    </div>
   );
 }
 

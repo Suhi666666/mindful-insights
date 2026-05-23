@@ -72,21 +72,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "懂一点 · 闲时学一个理论" },
+      {
+        name: "description",
+        content:
+          "随机弹出一个心理学/经济学/社会学理论，像翻卡片一样从浅入深讲给你听，500+ 理论大全 + 学习进度追踪。",
+      },
+      { property: "og:title", content: "懂一点 · 闲时学一个理论" },
+      {
+        property: "og:description",
+        content: "500+ 跨学科理论库，奶奶都能听懂的讲解 + 学习进度追踪。",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-    ],
+    links: [{ rel: "stylesheet", href: appCss }],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -113,7 +113,63 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <TopNav />
       <Outlet />
     </QueryClientProvider>
+  );
+}
+
+function TopNav() {
+  // theme toggle inline to avoid SSR mismatches
+  const toggle = () => {
+    if (typeof document === "undefined") return;
+    const isDark = document.documentElement.classList.toggle("dark");
+    try {
+      localStorage.setItem("theme-pref-v1", isDark ? "dark" : "light");
+    } catch {
+      /* noop */
+    }
+  };
+  return (
+    <>
+      {/* hydrate theme as early as possible */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `try{var t=localStorage.getItem('theme-pref-v1');if(t==='dark'){document.documentElement.classList.add('dark');}}catch(e){}`,
+        }}
+      />
+      <nav className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
+          <Link to="/" className="flex items-center gap-2 font-serif text-base text-ink">
+            <span className="inline-block h-2.5 w-2.5 rounded-full bg-primary" />
+            懂一点
+          </Link>
+          <div className="flex items-center gap-1 text-sm">
+            <NavLink to="/">首页</NavLink>
+            <NavLink to="/catalog">理论大全</NavLink>
+            <button
+              onClick={toggle}
+              aria-label="Toggle theme"
+              className="ml-2 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-ink-soft transition hover:text-ink"
+            >
+              <span className="hidden dark:inline">☀️ 浅色</span>
+              <span className="inline dark:hidden">🌙 深色</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+    </>
+  );
+}
+
+function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
+  return (
+    <Link
+      to={to}
+      activeOptions={{ exact: to === "/" }}
+      className="rounded-full px-3 py-1.5 text-ink-soft transition hover:text-ink data-[status=active]:bg-primary/10 data-[status=active]:text-primary"
+    >
+      {children}
+    </Link>
   );
 }

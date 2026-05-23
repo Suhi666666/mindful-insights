@@ -54,6 +54,32 @@
   --ink-soft: oklch(0.42 0.04 55);
 
   --grain: radial-gradient(oklch(0.5 0.05 60 / 0.06) 1px, transparent 1px);
+
+  --gradient-progress: linear-gradient(90deg, oklch(0.7 0.18 60), oklch(0.6 0.2 25), oklch(0.55 0.2 330));
+}
+
+.dark {
+  --background: oklch(0.18 0.02 50);
+  --foreground: oklch(0.94 0.02 80);
+  --card: oklch(0.22 0.025 55);
+  --card-foreground: oklch(0.94 0.02 80);
+  --primary: oklch(0.78 0.14 60);
+  --primary-foreground: oklch(0.18 0.02 50);
+  --secondary: oklch(0.28 0.03 55);
+  --secondary-foreground: oklch(0.94 0.02 80);
+  --muted: oklch(0.26 0.02 55);
+  --muted-foreground: oklch(0.7 0.03 70);
+  --accent: oklch(0.72 0.16 55);
+  --accent-foreground: oklch(0.18 0.02 50);
+  --border: oklch(0.32 0.025 55);
+  --ring: oklch(0.7 0.14 55);
+
+  --paper: oklch(0.24 0.025 55);
+  --paper-shadow: oklch(0 0 0 / 0.5);
+  --ink: oklch(0.94 0.02 80);
+  --ink-soft: oklch(0.78 0.03 70);
+
+  --grain: radial-gradient(oklch(0.8 0.05 60 / 0.04) 1px, transparent 1px);
 }
 
 @layer base {
@@ -107,3 +133,5 @@
   background: var(--paper);
   box-shadow: 0 6px 14px -6px var(--paper-shadow);
 }
+
+.progress-gradient { background: var(--gradient-progress); }
