@@ -72,21 +72,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "懂一点 · 闲时学一个理论" },
+      {
+        name: "description",
+        content:
+          "随机弹出一个心理学/经济学/社会学理论，像翻卡片一样从浅入深讲给你听，500+ 理论大全 + 学习进度追踪。",
+      },
+      { property: "og:title", content: "懂一点 · 闲时学一个理论" },
+      {
+        property: "og:description",
+        content: "500+ 跨学科理论库，奶奶都能听懂的讲解 + 学习进度追踪。",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-    ],
+    links: [{ rel: "stylesheet", href: appCss }],
   }),
   shellComponent: RootShell,
   component: RootComponent,
