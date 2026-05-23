@@ -73,19 +73,21 @@ function Index() {
     return page / (totalPages + 1);
   }, [page, totalPages, isCover, isTakeaway]);
 
+  // when user reaches takeaway, auto-mark matching catalog entry as learned
+  const { learned, mark } = useLearned();
+  useEffect(() => {
+    if (!isTakeaway) return;
+    const match = catalog.find((c) => c.nameZh === theory.name);
+    if (match) mark(match.id);
+  }, [isTakeaway, theory.name, mark]);
+
   return (
-    <main className="relative min-h-screen overflow-hidden px-4 py-10 sm:py-16">
+    <main className="relative min-h-screen overflow-hidden px-4 py-8 sm:py-12">
       <BackgroundDecor />
 
-      <header className="mx-auto mb-8 flex max-w-3xl items-center justify-between text-ink-soft">
-        <div className="flex items-center gap-2">
-          <div className="h-2.5 w-2.5 rounded-full bg-primary" />
-          <span className="serif text-lg tracking-wide">懂一点</span>
-        </div>
-        <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-          闲时学一个理论
-        </span>
-      </header>
+      <section className="mx-auto mb-8 max-w-3xl">
+        <ProgressHero learnedCount={learned.size} />
+      </section>
 
       <section className="mx-auto max-w-3xl">
         {!started ? (
